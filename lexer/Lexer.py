@@ -85,14 +85,16 @@ class Lexer():
                 else:
                     # check for integers
                     if word.isdigit():
-                        print(Integer(int(word), line).toString())
-
+                        self.channel_values.append(Integer(int(word), line))
+                        #print(Integer(int(word), line).toString())
                     # check for symbols
                     elif word in self.symbols:
-                        print(Token(word, self.symbols.get(word), line).toString())
+                        self.channel_values.append(Token(word, self.symbols.get(word), line))
+                        #print(Token(word, self.symbols.get(word), line).toString())
                     # check for reserver words
                     elif word in self.table:
-                        print(Word(word, self.table.get(word), line).toString())
+                        self.channel_values.append(Word(word, self.table.get(word), line))
+                        #print(Word(word, self.table.get(word), line).toString())
                     # check for comments
                     elif word == '(*':
                         comment = True
@@ -110,18 +112,22 @@ class Lexer():
             if w in self.symbols and self.reading_string == False:
                 if str != '':
                     if str.lower() in self.table:
-                        print(Word(str, self.table.get(str.lower()), line).toString())
+                        self.channel_values.append(Word(str, self.table.get(str.lower()), line))
+                        #print(Word(str, self.table.get(str.lower()), line).toString())
                     else:
-                        print(Word(str, Tag.IDENTIFIER, line).toString())
+                        self.channel_values.append(Word(str, Tag.IDENTIFIER, line))
+                        #print(Word(str, Tag.IDENTIFIER, line).toString())
                     str = ''
-                print(Token(w, self.symbols.get(w), line).toString())
+                self.channel_values.append(Token(w, self.symbols.get(w), line))
+                #print(Token(w, self.symbols.get(w), line).toString())
             else:
                 str += w
                 if w == "'" and self.reading_string == False:
                     self.reading_string = True
                 elif w == "'" and self.reading_string:
                     self.big_string += str
-                    print(String(self.big_string, line).toString())
+                    self.channel_values.append(String(self.big_string, line))
+                    #print(String(self.big_string, line).toString())
                     self.reading_string = False
                     str = ''
                     self.big_string = ''
@@ -130,7 +136,8 @@ class Lexer():
             self.big_string += str + ' '
         else:
             if str != '':
-                print(Word(str, Tag.IDENTIFIER, line).toString())
+                self.channel_values.append(Word(str, Tag.IDENTIFIER, line))
+                #print(Word(str, Tag.IDENTIFIER, line).toString())
 
     def real(self, word, line):
         str = ''
@@ -139,9 +146,11 @@ class Lexer():
                 str += w
             elif w in self.symbols:
                 if str != '':
-                    print(Real(float(str), line).toString())
+                    self.channel_values.append(Real(float(str), line))
+                    #print(Real(float(str), line).toString())
                     str = ''
-                print(Token(w, self.symbols.get(w), line).toString())
+                self.channel_values.append(Token(w, self.symbols.get(w), line))
+                #print(Token(w, self.symbols.get(w), line).toString())
             elif w.isdigit():
                 str += w
             else:
@@ -149,4 +158,5 @@ class Lexer():
                 return
 
         if str != '':
-            print(Real(float(str), line).toString())
+            self.channel_values.append(Real(float(str), line))
+            #print(Real(float(str), line).toString())

@@ -6,4 +6,4 @@ class Token(object):
         self.line = line
 
     def toString(self):
-        return "Token - Value = " + self.value +
+        return "Token - Value = " + self.value
