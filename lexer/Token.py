@@ -1,7 +1,9 @@
 class Token(object):
 
-    def __init__(self, tag):
+    def __init__(self, token, tag, line):
+        self.value = token
         self.tag = tag
+        self.line = line
 
     def toString(self):
-        return "Token - Value = " + str(self.tag)
+        return "Token - Value = " + self.value +
