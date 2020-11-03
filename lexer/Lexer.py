@@ -65,8 +65,8 @@ class Lexer():
         lines = file.readlines()
         l = 1
         for line in lines:
-            channel_values = line.split()
-            self.scan(channel_values, l)
+            values = line.split()
+            self.scan(values, l)
             l = l + 1
 
     def scan(self, values, line):
