@@ -51,7 +51,6 @@ class Parser():
                 symbol = stack.pop()
                 stack.append(symbol)
                 input_char = input[input_read].tag
-                line = input[input_read].line
 
                 # accepted case
                 if input_char == '$' and self.actions[state][input_char] == 'acc':
@@ -83,5 +82,7 @@ class Parser():
                         stack.append(state)
                         stack.append(self.productions[int(prod)][0])
             except:
-                print('Error in line: ' + str(line) + ' \'' + input_char + '\' not expected')
+                print('ERROR: Syntax error in line ' + str(input[input_read].line) +
+                      ' \'' + input[input_read].value + '\' not expected')
+                print('Fatal: Compilation aborted')
                 break

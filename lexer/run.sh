@@ -1,1 +1,1 @@
-python3 Main.py $1
+python Main.py $1
