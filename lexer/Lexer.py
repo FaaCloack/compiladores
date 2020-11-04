@@ -4,57 +4,13 @@ from String import String
 from Token import Token
 from Integer import Integer
 from Real import Real
+from Parser import Parser
+import utils
 
 
 class Lexer():
-    table = {
-        'program': Tag.PROGRAM,
-        'constant': Tag.CONSTANT,
-        'var': Tag.VAR,
-        'begin': Tag.BEGIN,
-        'end': Tag.END,
-        'writeln': Tag.WRITELN,
-        'readln': Tag.READLN,
-        'while': Tag.WHILE,
-        'do': Tag.DO,
-        'repeat': Tag.REPEAT,
-        'until': Tag.UNTIL,
-        'for': Tag.FOR,
-        'to': Tag.TO,
-        'downto': Tag.DOWNTO,
-        'if': Tag.IF,
-        'then': Tag.THEN,
-        'else': Tag.ELSE,
-        'not': Tag.NOT,
-        'or': Tag.OR,
-        'div': Tag.DIV,
-        'mod': Tag.MOD,
-        'and': Tag.AND,
-        'integer': Tag.INTEGER,
-        'real': Tag.REAL,
-        'boolean': Tag.BOOLEAN,
-        'string': Tag.STRING
-
-    }
-    symbols = {
-        ';': Tag.DOTCOMMA,
-        '.': Tag.DOT,
-        '(': Tag.OPENPAR,
-        ')': Tag.CLOSEPAR,
-        '=': Tag.EQ,
-        ':': Tag.DOBDOT,
-        ',': Tag.COMMA,
-        ':=': Tag.ASSIGN,
-        '+': Tag.PLUS,
-        '-': Tag.MINUS,
-        '<>': Tag.MINGR,
-        '<': Tag.MIN,
-        '<=': Tag.MINEQ,
-        '>': Tag.GR,
-        '>=': Tag.GREQ,
-        '*': Tag.MULT,
-        '/': Tag.FRAC
-    }
+    table = utils.table
+    symbols = utils.symbols
     channel_values = []
     big_string = ''
     reading_string = False
@@ -68,6 +24,9 @@ class Lexer():
             values = line.split()
             self.scan(values, l)
             l = l + 1
+        # Go to Parser
+        self.channel_values.append(Token('$', '$', l))
+        Parser(self.channel_values)
 
     def scan(self, values, line):
         comment = False
@@ -89,11 +48,11 @@ class Lexer():
                         #print(Integer(int(word), line).toString())
                     # check for symbols
                     elif word in self.symbols:
-                        self.channel_values.append(Token(word, self.symbols.get(word), line))
+                        self.channel_values.append(Token(word, word, line))
                         #print(Token(word, self.symbols.get(word), line).toString())
                     # check for reserver words
                     elif word in self.table:
-                        self.channel_values.append(Word(word, self.table.get(word), line))
+                        self.channel_values.append(Word(word, word, line))
                         #print(Word(word, self.table.get(word), line).toString())
                     # check for comments
                     elif word == '(*':
@@ -112,13 +71,13 @@ class Lexer():
             if w in self.symbols and self.reading_string == False:
                 if str != '':
                     if str.lower() in self.table:
-                        self.channel_values.append(Word(str, self.table.get(str.lower()), line))
+                        self.channel_values.append(Word(str, str.lower(), line))
                         #print(Word(str, self.table.get(str.lower()), line).toString())
                     else:
-                        self.channel_values.append(Word(str, Tag.IDENTIFIER, line))
+                        self.channel_values.append(Word(str, 'identifier', line))
                         #print(Word(str, Tag.IDENTIFIER, line).toString())
                     str = ''
-                self.channel_values.append(Token(w, self.symbols.get(w), line))
+                self.channel_values.append(Token(w, w, line))
                 #print(Token(w, self.symbols.get(w), line).toString())
             else:
                 str += w
@@ -136,7 +95,7 @@ class Lexer():
             self.big_string += str + ' '
         else:
             if str != '':
-                self.channel_values.append(Word(str, Tag.IDENTIFIER, line))
+                self.channel_values.append(Word(str, 'identifier', line))
                 #print(Word(str, Tag.IDENTIFIER, line).toString())
 
     def real(self, word, line):
@@ -149,7 +108,7 @@ class Lexer():
                     self.channel_values.append(Real(float(str), line))
                     #print(Real(float(str), line).toString())
                     str = ''
-                self.channel_values.append(Token(w, self.symbols.get(w), line))
+                self.channel_values.append(Token(w, w, line))
                 #print(Token(w, self.symbols.get(w), line).toString())
             elif w.isdigit():
                 str += w

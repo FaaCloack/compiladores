@@ -1,6 +1,6 @@
 Program Example3;
 Var name, surname: String;
-     
+
 Begin
 	writeln('Enter your name:');
 	readln(name);

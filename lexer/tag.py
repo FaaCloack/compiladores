@@ -88,5 +88,5 @@ DIV = 42
 MOD = 43
 # and
 AND = 44
-
-ID = 888
+# $
+SIGN = 45
