@@ -1,4 +1,3 @@
-import tag as Tag
 from Word import Word
 from String import String
 from Token import Token

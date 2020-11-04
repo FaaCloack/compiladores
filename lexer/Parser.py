@@ -54,11 +54,11 @@ class Parser():
                 line = input[input_read].line
 
                 # accepted case
-                if(input_char == '$' and self.actions[state][input_char] == 'acc'):
+                if input_char == '$' and self.actions[state][input_char] == 'acc':
                     print('ACCEPTED')
                     break
                 # non-terminals / goto
-                if (non_terminals.get(symbol)):
+                if symbol in non_terminals:
                     state = int(self.gotos[state][symbol])
                     #print('goto ' + str(state))
                     stack.append(state)
